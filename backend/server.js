@@ -23,17 +23,17 @@ app.get('/health', (req, res) => {
 });
 
 // Start pinging every 50 seconds
-const pingServer = () => {
+/*const pingServer = () => {
   axios.get(`${process.env.BASE_URL}/health`) // Assuming health endpoint
     .then(() => console.log('Server pinged successfully'))
     .catch((err) => console.error('Error pinging server:', err));
-};
+};*/
 
 // Ping the server immediately on start
-pingServer();
+//pingServer();
 
 // Ping every 50 seconds (50000 milliseconds)
-setInterval(pingServer, 50000);
+//setInterval(pingServer, 50000);
 
 app.listen(process.env.PORT, () => {
   console.log(`Server running on port ${process.env.PORT}`);
