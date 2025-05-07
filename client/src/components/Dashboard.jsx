@@ -20,7 +20,7 @@ function Dashboard({transaction}) {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const response = await axios.get('http://localhost:5000/api/user/details', {
+        const response = await axios.get('https://bankingapp-1gz3.onrender.com/api/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);

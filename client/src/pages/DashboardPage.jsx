@@ -9,7 +9,7 @@ function DashboardPage() {
       const fetchHistory = async () => {
         try {
           const token = localStorage.getItem('token');
-          const res = await axios.get('http://localhost:5000/api/transaction/history', {
+          const res = await axios.get('https://bankingapp-1gz3.onrender.com/api/transaction/history', {
             headers: { Authorization: `Bearer ${token}` },
           });
           setTransactions(res.data.transactions);
