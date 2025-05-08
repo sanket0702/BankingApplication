@@ -10,18 +10,13 @@ function Dashboard({transaction}) {
   const [showQRCode, setShowQRCode] = useState(false);
   const navigate = useNavigate();
 
-  const recentTransactions = [
-    { id: 1, date: "2025-05-06", description: "Transferred to Jane Doe", amount: "-₹2000" },
-    { id: 2, date: "2025-05-04", description: "Deposited from Salary", amount: "+₹50,000" },
-    { id: 3, date: "2025-05-02", description: "Electricity Bill Payment", amount: "-₹1500" }
-  ];
-
+  
   useEffect(() => {
     const fetchUserDetails = async () => {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const response = await axios.get('https://bankingapp-1gz3.onrender.com/api/user/details', {
+        const response = await axios.get('http://localhost:5000/api/user/details', {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);
@@ -44,15 +39,10 @@ function Dashboard({transaction}) {
   if (!user) return <BankingLoader/>;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6 relative">
+    <div className="min-h-screen bg-gray-50 p relative">
       {/* Logout Button */}
       <div className="absolute top-6 right-6">
-        <button
-          onClick={handleLogout}
-          className="bg-red-600 text-white px-4 py-2 rounded-xl hover:bg-red-700 transition"
-        >
-          Logout
-        </button>
+        
       </div>
 
       <div className="max-w-7xl mx-auto bg-white rounded-2xl shadow-lg p-8">
@@ -68,21 +58,31 @@ function Dashboard({transaction}) {
           <div className="flex justify-between items-center mt-4">
             <p className="text-lg text-gray-700">Current Balance</p>
             <button 
-              className="text-xl font-bold text-green-600"
-              onClick={handleShowBalance}
-            >
-              {showBalance ? `₹${user.balance}` : "Click to view balance"}
-            </button>
+  className="text-xl font-bold text-green-600 flex items-center gap-2"
+  onClick={handleShowBalance}
+>
+  {showBalance ? (
+    `₹${user.balance}`
+  ) : (
+    <>
+      <img
+        src="https://img.icons8.com/?size=100&id=59814&format=png&color=000000"
+        alt="Show Balance"
+        className="w-6 h-6"
+      />
+    </>
+  )}
+</button>
           </div>
         </div>
 
         {/* Quick Actions */}
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
-          <QuickActionCard icon="💵" onClick={handleShowBalance} />
-          <QuickActionCard icon="💸" onClick={handleTransferFunds} />
-          <QuickActionCard icon="🧾" />
-          <QuickActionCard icon="📲" onClick={handleQRClick} />
-          <QuickActionCard icon="📷" onClick={handleScanQR} />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=rCigw8Fdv69u&format=png&color=000000" onClick={handleShowBalance} />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=Tm8J0mjXpQFK&format=png&color=000000" onClick={handleTransferFunds} />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=dGdONlcTaLHk&format=png&color=000000" />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=13019&format=png&color=000000" onClick={handleQRClick} />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=rLRqKccL7rzF&format=png&color=000000" onClick={handleScanQR} />
         </div>
 
         {/* Recent Transactions */}
@@ -137,10 +137,10 @@ function Dashboard({transaction}) {
 
 const QuickActionCard = ({ icon, onClick }) => (
   <div
-    className="bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer flex justify-center items-center text-3xl"
+    className="bg-white p-2 rounded-xl shadow-md hover:shadow-lg transition cursor-pointer flex justify-center items-center text-3xl"
     onClick={onClick}
   >
-    {icon}
+    <img src={icon} alt="" />
   </div>
 );
 

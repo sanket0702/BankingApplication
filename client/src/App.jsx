@@ -1,57 +1,41 @@
 import React from 'react';
-import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Routes, Outlet } from 'react-router-dom';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
 import DashboardPage from './pages/DashboardPage';
 import SendMoneyPage from './pages/SendMoneyPage';
-import SendMoneyScan from './components/SendMoneyScan';
-import ProtectedRoute from './components/ProtectedRoutes'; // ✅ import
+import SendMoneyScan from './pages/SendMoneyScan';
+import ProtectedRoute from './components/ProtectedRoutes';
 import TransactionHistoryPage from './pages/TransactionHistoryPage';
+import Navbar from './components/Navbar';
+
+function ProtectedLayout() {
+  return (
+    <ProtectedRoute>
+      <>
+        <Navbar />
+        <Outlet />
+      </>
+    </ProtectedRoute>
+  );
+}
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
 
-        {/* 🔐 Protected Routes */}
-        <Route
-          path="/dashboard"
-          element={
-            <ProtectedRoute>
-              <DashboardPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/send-money"
-          element={
-            <ProtectedRoute>
-              <SendMoneyPage />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/send-money-qr"
-          element={
-            <ProtectedRoute>
-              <SendMoneyScan />
-            </ProtectedRoute>
-          }
-        />
-
-<Route
-          path="/transactions/history"
-          element={
-            <ProtectedRoute>
-              <TransactionHistoryPage/>
-            </ProtectedRoute>
-          }
-        />
+        {/* Protected Layout with Navbar */}
+        <Route element={<ProtectedLayout />}>
+          <Route path="/dashboard" element={<DashboardPage />} />
+          <Route path="/send-money" element={<SendMoneyPage />} />
+          <Route path="/send-money-qr" element={<SendMoneyScan />} />
+          <Route path="/transactions/history" element={<TransactionHistoryPage />} />
+        </Route>
       </Routes>
-
-      
     </Router>
   );
 }
