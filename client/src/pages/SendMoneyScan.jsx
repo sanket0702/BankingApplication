@@ -37,18 +37,14 @@ const [paymentDone, setPaymentDone] = useState(false);
     const scannerId = 'qr-reader';
     let html5QrCode = new Html5Qrcode(scannerId);
     let isMounted = true;
-
-    Html5Qrcode.getCameras()
-  .then((devices) => {
-    if (devices && devices.length > 0 && isMounted) {
-      // Try to select the back camera
-      const backCamera = devices.find(device =>
-        device.label.toLowerCase().includes('back')
-      ) || devices[0]; // Fallback to first camera if back not found
-
+  
+    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+  
+    if (isMobile) {
+      // Mobile: force back camera
       html5QrCode
         .start(
-          backCamera.id,  // Use back camera ID
+          { facingMode: { exact: "environment" } },
           { fps: 10, qrbox: { width: 250, height: 250 } },
           (decodedText) => {
             console.log('QR Code Scanned:', decodedText);
@@ -67,17 +63,47 @@ const [paymentDone, setPaymentDone] = useState(false);
         })
         .catch((err) => {
           console.error('Unable to start scanning:', err);
-          setError('Camera access error. Please allow permissions.');
+          setError('Unable to access back camera. Please check permissions.');
         });
     } else {
-      setError('No camera found.');
+      // Desktop: fallback to deviceId-based scan
+      Html5Qrcode.getCameras()
+        .then((devices) => {
+          if (devices && devices.length > 0 && isMounted) {
+            const deviceId = devices[0].id; // fallback to first camera
+            html5QrCode
+              .start(
+                { deviceId },
+                { fps: 10, qrbox: { width: 250, height: 250 } },
+                (decodedText) => {
+                  console.log('QR Code Scanned:', decodedText);
+                  setRecipient(decodedText);
+                  html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    setScannerStarted(false);
+                  });
+                },
+                (err) => {
+                  console.warn('Scan error:', err);
+                }
+              )
+              .then(() => {
+                setScannerStarted(true);
+              })
+              .catch((err) => {
+                console.error('Unable to start scanning:', err);
+                setError('Unable to access camera. Please check permissions.');
+              });
+          } else {
+            setError('No camera found.');
+          }
+        })
+        .catch((err) => {
+          console.error('Error accessing cameras:', err);
+          setError('Camera access denied or unavailable.');
+        });
     }
-  })
-      .catch((err) => {
-        console.error('Error accessing cameras:', err);
-        setError('Camera access denied or unavailable.');
-      });
-
+  
     return () => {
       isMounted = false;
       if (scannerStarted) {
