@@ -39,37 +39,40 @@ const [paymentDone, setPaymentDone] = useState(false);
     let isMounted = true;
 
     Html5Qrcode.getCameras()
-      .then((devices) => {
-        if (devices && devices.length > 0 && isMounted) {
-          const cameraId = devices[0].id;
+  .then((devices) => {
+    if (devices && devices.length > 0 && isMounted) {
+      // Try to select the back camera
+      const backCamera = devices.find(device =>
+        device.label.toLowerCase().includes('back')
+      ) || devices[0]; // Fallback to first camera if back not found
 
-          html5QrCode
-            .start(
-              cameraId,
-              { fps: 10, qrbox: { width: 250, height: 250 } },
-              (decodedText) => {
-                console.log('QR Code Scanned:', decodedText);
-                setRecipient(decodedText);
-                html5QrCode.stop().then(() => {
-                  html5QrCode.clear();
-                  setScannerStarted(false);
-                });
-              },
-              (err) => {
-                console.warn('Scan error:', err);
-              }
-            )
-            .then(() => {
-              setScannerStarted(true);
-            })
-            .catch((err) => {
-              console.error('Unable to start scanning:', err);
-              setError('Camera access error. Please allow permissions.');
+      html5QrCode
+        .start(
+          backCamera.id,  // Use back camera ID
+          { fps: 10, qrbox: { width: 250, height: 250 } },
+          (decodedText) => {
+            console.log('QR Code Scanned:', decodedText);
+            setRecipient(decodedText);
+            html5QrCode.stop().then(() => {
+              html5QrCode.clear();
+              setScannerStarted(false);
             });
-        } else {
-          setError('No camera found.');
-        }
-      })
+          },
+          (err) => {
+            console.warn('Scan error:', err);
+          }
+        )
+        .then(() => {
+          setScannerStarted(true);
+        })
+        .catch((err) => {
+          console.error('Unable to start scanning:', err);
+          setError('Camera access error. Please allow permissions.');
+        });
+    } else {
+      setError('No camera found.');
+    }
+  })
       .catch((err) => {
         console.error('Error accessing cameras:', err);
         setError('Camera access denied or unavailable.');
