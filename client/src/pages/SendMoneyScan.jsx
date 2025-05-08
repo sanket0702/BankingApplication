@@ -109,7 +109,7 @@ const [paymentDone, setPaymentDone] = useState(false);
       const transactionData = { recipient, amount, message };
   
       const response = await axios.post(
-        'http://localhost:5000/api/transaction/send-money',
+        'https://bankingapp-1gz3.onrender.com/api/transaction/send-money',
         transactionData,
         {
           headers: { Authorization: `Bearer ${userToken}` },
