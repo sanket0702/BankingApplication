@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
+import BankingLoader from '../logo/LoadingLogo';
 
 function Dashboard({transaction}) {
   const [user, setUser] = useState(null);
@@ -40,7 +41,7 @@ function Dashboard({transaction}) {
     window.location.reload();
   };
 
-  if (!user) return <p>Loading...</p>;
+  if (!user) return <BankingLoader/>;
 
   return (
     <div className="min-h-screen bg-gray-50 p-6 relative">
