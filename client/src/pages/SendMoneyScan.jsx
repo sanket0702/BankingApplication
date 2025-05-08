@@ -131,13 +131,13 @@ function SendMoneyScan() {
       ) : paymentDone ? (
         <div className="centered">
           <SuccessAnimation />
-          <button className="btn primary" onClick={handleGoBack}>
+          <button className="btn primary bg-gradient-to-r from-red-500 to-red-800" onClick={handleGoBack}>
             Back to Dashboard
           </button>
         </div>
       ) : !recipient ? (
         <>
-          <button type="button" className="text-center mt-4 text-red-600 underline">
+          <button type="button" onClick={handleGoBack} className="text-center mt-4 text-red-600 underline">
             <ArrowLeft className="w-6 h-6 text-red-600" />
           </button>
           <h2 className="heading">Send Money via QR</h2>
@@ -166,7 +166,7 @@ function SendMoneyScan() {
       ) : (
         <div className="flex flex-col h-[80vh] justify-between bg-gradient-to-b from-red-100 via-red-200 to-red-300">
           <div className="flex items-center p-4 bg-white/90 backdrop-blur border-b shadow">
-            <button type="button" className="text-center mt-4 text-red-600 underline">
+            <button onClick={handleGoBack}  type="button" className="text-center mt-4 text-red-600 underline">
               <ArrowLeft className="w-6 h-6 text-red-600" />
             </button>
             <div className="flex-1 text-center">

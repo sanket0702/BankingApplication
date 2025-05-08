@@ -15,7 +15,7 @@ export default function SuccessAnimation() {
   }, []);
 
   return (
-    <div className="flex items-center justify-center h-screen bg-white">
+    <div className="flex items-center justify-center h-[70vh] bg-white">
       <Player
         autoplay
         keepLastFrame

@@ -8,7 +8,7 @@ import SendMoneyScan from './pages/SendMoneyScan';
 import ProtectedRoute from './components/ProtectedRoutes';
 import TransactionHistoryPage from './pages/TransactionHistoryPage';
 import Navbar from './components/Navbar';
-
+import "./App.css"
 function ProtectedLayout() {
   return (
     <ProtectedRoute>
