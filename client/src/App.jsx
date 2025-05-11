@@ -6,6 +6,8 @@ import DashboardPage from './pages/DashboardPage';
 import SendMoneyPage from './pages/SendMoneyPage';
 import SendMoneyScan from './pages/SendMoneyScan';
 import ProtectedRoute from './components/ProtectedRoutes';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import Navbar from './components/Navbar';
 import ResetPassword from './pages/ResetPassword'
@@ -25,8 +27,11 @@ function ProtectedLayout() {
 
 function App() {
   return (
+   <>
+     <ToastContainer position="top-right" autoClose={3000} />
     <Router>
       <Routes>
+        
         {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -43,6 +48,7 @@ function App() {
         </Route>
       </Routes>
     </Router>
+   </>
   );
 }
 

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate, Link } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 function Register() {
   const [formData, setFormData] = useState({
@@ -33,14 +34,30 @@ function Register() {
       setError('Passwords do not match');
       return;
     }
-
     try {
-      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
+    const response = await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
+
+    if (response.data.error) {
+      setError(response.data.error);
+      toast.error(response.data.error);
+    } else {
+      toast.success('Registration successful!');
       navigate('/');
-    } catch (err) {
-      console.error(err);
-      setError('Registration failed. Try again later.');
     }
+
+  } catch (err) {
+    console.error(err);
+
+    if (err.response && err.response.data && err.response.data.error) {
+      setError(err.response.data.error);
+      toast.error(err.response.data.error);
+    } else {
+      setError('Registration failed. Try again later.');
+      toast.error('Registration failed. Try again later.');
+    }
+  }
+   
+
   };
 
   return (
