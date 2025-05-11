@@ -25,6 +25,11 @@ function Login() {
   const handleRegister=()=>{
     navigate('/register');
   }
+  const handleResetPassword=()=>{
+    navigate('/reset-password');
+  }
+
+  
 
   ///////////
   return (
@@ -66,7 +71,7 @@ function Login() {
               <input type="checkbox" className="mr-2" />
               Remember me
             </label>
-            <a href="#" className="text-red-600 hover:underline">Forgot Password?</a>
+            <button onClick={handleResetPassword}  className="text-red-600 hover:underline">Forgot Password?</button>
           </div>
 
           <button

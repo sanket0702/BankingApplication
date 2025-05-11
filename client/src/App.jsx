@@ -8,6 +8,7 @@ import SendMoneyScan from './pages/SendMoneyScan';
 import ProtectedRoute from './components/ProtectedRoutes';
 import TransactionHistoryPage from './pages/TransactionHistoryPage';
 import Navbar from './components/Navbar';
+import ResetPassword from './pages/ResetPassword'
 import "./App.css"
 function ProtectedLayout() {
   return (
@@ -27,7 +28,7 @@ function App() {
         {/* Public Routes */}
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* Protected Layout with Navbar */}
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />

@@ -5,6 +5,7 @@ const cors = require('cors');
 const authRoutes = require('./routes/auth.js');
 const transactionRoutes = require('./routes/transaction.js');
 const userRoutes = require('./routes/user.js');
+const passwordRoutes = require('./routes/resetpassword.js')
 const { DatabaseConnection } = require('./database/connection.js');
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/transaction', transactionRoutes);
 app.use('/api/user', userRoutes);
+app.use('/api/reset-password', passwordRoutes);
 
 // Health check route to confirm server is running
 app.get('/health', (req, res) => {
