@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react'; // Optional: install Lucide icons
-
+import Logo from "../assets/logo.svg"
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
 
@@ -15,7 +15,7 @@ function Navbar() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo/Brand */}
-          <div className="text-white font-bold text-xl">MyBank</div>
+          <div className="text-white font-bold "><img className='h-16' src={Logo}/></div>
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 text-white font-medium">

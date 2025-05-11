@@ -26,6 +26,13 @@ app.get('/health', (req, res) => {
   res.status(200).send('Server is running');
 });
 
+
+// Optional: keep-alive ping for Render or similar free-tier hosting
+setInterval(() => {
+  fetch('https://bankingapplication-0bj9.onrender.com')
+    .then(() => console.log('Keep-alive ping sent.'))
+    .catch(err => console.error('Keep-alive failed:', err));
+}, 5 * 60 * 1000); // every 5 minutes
 // Optional ping to keep server alive
 // setupPing();
 

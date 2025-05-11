@@ -35,7 +35,8 @@ function Login() {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
-        <h2 className="text-3xl font-bold text-center text-red-600 mb-6">Trusted Bank Login</h2>
+       
+        <h2 className="text-3xl font-bold text-center text-red-600 mb-6"> Bank Login</h2>
         <div className='flex justify-center mb-2.5'>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         </div>
