@@ -26,6 +26,7 @@ function SendMoney() {
       const userToken = localStorage.getItem('token'); // Assuming JWT is stored in localStorage
       if (!userToken) {
         setError('You must be logged in to send money.');
+        setIsProcessing(false);
         return;
       }
       setIsProcessing(true);
@@ -48,13 +49,13 @@ function SendMoney() {
           },
         }
       );
-     setSuccess('Transaction successful!');
-      setError(response.message);
-      setIsProcessing(false);
-      setPaymentDone(true);
-      setRecipient('');
-      setAmount('');
-      setMessage('');
+      setTimeout(() => {
+        setIsProcessing(false);
+        setPaymentDone(true);
+        setSuccess('Transaction successful!');
+        setAmount('');
+        setMessage('');
+      }, 1500);
     } catch (err) {
         const errorMessage =
     err.response?.data?.error || 'Error sending money. Please try again.';
