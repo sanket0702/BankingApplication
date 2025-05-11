@@ -35,7 +35,7 @@ function Register() {
     }
 
     try {
-      await axios.post('https://bankingapp-1gz3.onrender.com/api/auth/register', formData);
+      await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
       navigate('/login');
     } catch (err) {
       console.error(err);

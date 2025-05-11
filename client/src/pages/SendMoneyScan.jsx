@@ -83,7 +83,7 @@ function SendMoneyScan() {
       const transactionData = { recipient, amount, message };
 
       const response = await axios.post(
-        'https://bankingapp-1gz3.onrender.com/api/transaction/send-money',
+        `${import.meta.env.VITE_API_BASE_URL}/api/transaction/send-money`,
         transactionData,
         {
           headers: { Authorization: `Bearer ${userToken}` },

@@ -1,6 +1,11 @@
 const User = require('../models/User.js');
 const Transaction = require('../models/Transaction.js');
-const sendEmail = require('../utils/sendEmail.js');
+
+const {generateTransactionId}= require('../helper/generateTransactionId.js')
+const {sendCreditedEmail,sendDebitedEmail}=require('../utils/mailer/TransactionMessage.js')
+const buildDebitEmail = require('../HtmlMessages/Transactions/buildDebitEmail.js');
+
+const buildCreditEmail = require('../HtmlMessages/Transactions/buildCreditEmail.js');
 
 // Send Money
 exports.sendMoney = async (req, res) => {
@@ -45,8 +50,15 @@ exports.sendMoney = async (req, res) => {
     await sender.save();
     await recipientUser.save();
 
+// Generate unique transaction ID
+    const transactionId = generateTransactionId();
+
+    const timestamp = new Date(); 
+
     // Save transaction
     const transaction = new Transaction({
+
+      transactionId,
       sender: sender._id,
       recipient: recipientUser._id,
       amount: numericAmount,
@@ -57,12 +69,27 @@ exports.sendMoney = async (req, res) => {
       receiverName: recipientUser.fullName,
       receiverUpi: recipientUser.upiId,
       receiverAccount: recipientUser.accountNumber,
+      senderBalance: sender.balance, // Store sender's balance after transaction
+      receiverBalance: recipientUser.balance,
+      timestamp
     });
     await transaction.save();
 console.log(sender.email);
+
+
+
+
+
+
+
     // Send email notifications
-    sendEmail(sender.email, 'Transaction Sent', `You sent ₹${numericAmount} to ${recipientUser.fullName}. New balance: ₹${sender.balance}`);
-    sendEmail(recipientUser.email, 'Transaction Received', `You received ₹${numericAmount} from ${sender.fullName}. New balance: ₹${recipientUser.balance}`);
+    
+
+await sendDebitedEmail(sender.email, 'Debit Alert - Trusted Bank',sender, recipientUser, numericAmount, transactionId, timestamp);
+
+
+    await sendCreditedEmail(recipientUser.email, 'Credit Alert - Trusted Bank',sender, recipientUser, numericAmount, transactionId, timestamp);
+
 
     res.json({ message: 'Transaction successful' });
   } catch (error) {
@@ -70,6 +97,7 @@ console.log(sender.email);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 
 exports.getUserTransactions = async (req, res) => {

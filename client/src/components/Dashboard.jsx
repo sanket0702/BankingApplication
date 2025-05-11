@@ -16,7 +16,7 @@ function Dashboard({transaction}) {
       const token = localStorage.getItem('token');
       if (!token) return;
       try {
-        const response = await axios.get('https://bankingapp-1gz3.onrender.com/api/user/details', {
+        const response = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/details`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         setUser(response.data);
@@ -86,32 +86,7 @@ function Dashboard({transaction}) {
         </div>
 
         {/* Recent Transactions */}
-        <div className="bg-gray-100 p-6 rounded-xl shadow-sm">
-          <h3 className="text-xl font-semibold text-red-600 mb-4">Recent Transactions</h3>
-
-
-          <ul className="space-y-4">
-          {transaction.map((txn, index) => {
-  const isCredit = txn.receiverUpi === user.upiId;
-  const formattedDate = new Date(txn.timestamp).toLocaleString();
-  const amountText = `${isCredit ? '+' : '-'}₹${txn.amount}`;
-
-  return (
-    <li key={txn._id || index} className="flex justify-between items-center">
-      <div>
-        <p className="text-gray-700 font-semibold">
-          {isCredit ? `CREDITED FROM ${txn.senderName}` : `DEBITED TO ${txn.receiverName}`}
-        </p>
-        <p className="text-sm text-gray-500">{formattedDate}</p>
-      </div>
-      <p className={`font-medium ${isCredit ? 'text-green-600' : 'text-red-600'}`}>
-        {amountText}
-      </p>
-    </li>
-    );
-  })}
-</ul>
-        </div>
+       
       </div>
 
       {/* QR Code Pop-up */}

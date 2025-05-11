@@ -5,10 +5,14 @@ const ProcessingAnimation2 = () => {
   return (
     <div className="flex justify-center m-auto h-[50vh] ">
       <motion.div
-        initial={{ scale: 0, rotate: 180 }}
-        animate={{ scale: 1, rotate: 0 }}
-        transition={{ duration: 1.5, type: "spring", stiffness: 120 }}
-        className="p-6 rounded-full shadow-lg"
+        animate={{ rotate: [-15, 15, -15] }} // back-and-forth rotation
+        transition={{
+          duration: 1.2,
+          repeat: Infinity,
+          repeatType: "loop",
+          ease: "easeInOut",
+        }}
+        className="p-6 rounded-full shadow-lg bg-white"
       >
         <svg
           width="100"
@@ -23,7 +27,14 @@ const ProcessingAnimation2 = () => {
               <stop offset="100%" stopColor="#b30000" />
             </linearGradient>
           </defs>
-          <circle cx="50" cy="50" r="48" stroke="url(#redGradient)" strokeWidth="4" fill="white" />
+          <circle
+            cx="50"
+            cy="50"
+            r="48"
+            stroke="url(#redGradient)"
+            strokeWidth="4"
+            fill="white"
+          />
           <text
             x="50%"
             y="54%"

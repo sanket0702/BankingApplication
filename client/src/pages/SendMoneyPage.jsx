@@ -1,7 +1,14 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import ProcessingAnimation2 from '../Animation/PaymentProcessing.jsx/Animation';
+import SuccessAnimation from '../Animation/SuccessAnimation';
 
 function SendMoney() {
+ const navigate=useNavigate();
+
+  const [isProcessing, setIsProcessing] = useState(false);
+    const [paymentDone, setPaymentDone] = useState(false);
   const [recipient, setRecipient] = useState('');
   const [amount, setAmount] = useState('');
   const [message, setMessage] = useState('');
@@ -21,6 +28,9 @@ function SendMoney() {
         setError('You must be logged in to send money.');
         return;
       }
+      setIsProcessing(true);
+    setError('');
+    setSuccess('');
 
       const transactionData = {
         recipient,
@@ -30,7 +40,7 @@ function SendMoney() {
 
       // Send money API request
       const response = await axios.post(
-        'https://bankingapp-1gz3.onrender.com/api/transaction/send-money',
+        `${import.meta.env.VITE_API_BASE_URL}/api/transaction/send-money`,
         transactionData,
         {
           headers: {
@@ -38,8 +48,10 @@ function SendMoney() {
           },
         }
       );
-      setSuccess('Transaction successful!');
+     setSuccess('Transaction successful!');
       setError(response.message);
+      setIsProcessing(false);
+      setPaymentDone(true);
       setRecipient('');
       setAmount('');
       setMessage('');
@@ -51,9 +63,25 @@ function SendMoney() {
     }
   };
 
+  const handleGoBack = () => {
+    navigate('/dashboard');
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-red-100 via-red-200 to-red-300 flex items-center justify-center px-4">
-    <div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg">
+   <div className="min-h-screen bg-gradient-to-b from-red-100 via-red-200 to-red-300 flex items-center justify-center px-4">
+
+      {isProcessing ? (
+        <div className="centered">
+          <ProcessingAnimation2 />
+        </div>
+      ) : paymentDone ? (
+        <div className="centered">
+          <SuccessAnimation />
+          <button className="btn primary bg-gradient-to-r from-red-500 to-red-800" onClick={handleGoBack}>
+            Back to Dashboard
+          </button>
+        </div>
+      ) :(<div className="w-full max-w-md bg-white p-6 rounded-2xl shadow-lg">
       <h2 className="text-2xl font-bold text-red-700 mb-6 text-center">Send Money</h2>
   
       <form onSubmit={handleSubmit} className="space-y-4">
@@ -107,8 +135,10 @@ function SendMoney() {
       {/* Status Messages */}
       {error && <p className="text-red-700 mt-4 text-sm text-center">{error}</p>}
       {success && <p className="text-green-600 mt-4 text-sm text-center">{success}</p>}
-    </div>
+    </div>)}
+    
   </div>
+  
   
   );
 }
