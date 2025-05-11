@@ -7,7 +7,7 @@ const ProcessingAnimation2 = () => {
       <motion.div
         animate={{ rotate: [-15, 15, -15] }} // back-and-forth rotation
         transition={{
-          duration: 1.2,
+          duration: 0.8,
           repeat: Infinity,
           repeatType: "loop",
           ease: "easeInOut",

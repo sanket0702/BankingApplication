@@ -8,7 +8,7 @@ import ProcessingAnimation from '../Animation/ProcessingAnimation';
 import SuccessAnimation from '../Animation/SuccessAnimation';
 import '../styles/MoneySendScan.css';
 import ProcessingAnimation2 from '../Animation/PaymentProcessing.jsx/Animation';
-
+import  Processing from "../Animation/PaymentProcessingLatest/Processing"
 function SendMoneyScan() {
   const [showMessageInput, setShowMessageInput] = useState(false);
   const [isProcessing, setIsProcessing] = useState(false);
@@ -126,7 +126,7 @@ function SendMoneyScan() {
     <div className="send-money-container">
       {isProcessing ? (
         <div className="centered">
-          <ProcessingAnimation2 />
+          < Processing />
         </div>
       ) : paymentDone ? (
         <div className="centered">

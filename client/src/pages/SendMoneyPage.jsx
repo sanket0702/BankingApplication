@@ -3,6 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import ProcessingAnimation2 from '../Animation/PaymentProcessing.jsx/Animation';
 import SuccessAnimation from '../Animation/SuccessAnimation';
+import  Processing from "../Animation/PaymentProcessingLatest/Processing"
 
 function SendMoney() {
  const navigate=useNavigate();
@@ -26,7 +27,7 @@ function SendMoney() {
       const userToken = localStorage.getItem('token'); // Assuming JWT is stored in localStorage
       if (!userToken) {
         setError('You must be logged in to send money.');
-        setIsProcessing(false);
+        
         return;
       }
       setIsProcessing(true);
@@ -49,13 +50,19 @@ function SendMoney() {
           },
         }
       );
+      // Show success animation after 1.5 seconds
+    setTimeout(() => {
+      setIsProcessing(false);
+      setPaymentDone(true);
+      setSuccess('Transaction successful!');
+      setAmount('');
+      setMessage('');
+
+      // ⏳ Auto-redirect after 2 minutes (120000 ms)
       setTimeout(() => {
-        setIsProcessing(false);
-        setPaymentDone(true);
-        setSuccess('Transaction successful!');
-        setAmount('');
-        setMessage('');
-      }, 1500);
+        navigate('/dashboard');
+      }, 120000);
+    }, 1500);
     } catch (err) {
         const errorMessage =
     err.response?.data?.error || 'Error sending money. Please try again.';
@@ -73,7 +80,7 @@ function SendMoney() {
 
       {isProcessing ? (
         <div className="centered">
-          <ProcessingAnimation2 />
+          <Processing />
         </div>
       ) : paymentDone ? (
         <div className="centered">
