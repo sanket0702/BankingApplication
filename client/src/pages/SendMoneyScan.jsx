@@ -90,13 +90,19 @@ function SendMoneyScan() {
         }
       );
 
+     // Show success animation after 1.5 seconds
+    setTimeout(() => {
+      setIsProcessing(false);
+      setPaymentDone(true);
+      setSuccess('Transaction successful!');
+      setAmount('');
+      setMessage('');
+
+      // ⏳ Auto-redirect after 2 minutes (120000 ms)
       setTimeout(() => {
-        setIsProcessing(false);
-        setPaymentDone(true);
-        setSuccess('Transaction successful!');
-        setAmount('');
-        setMessage('');
-      }, 1500);
+        navigate('/dashboard');
+      }, 120000);
+    }, 1500);
     } catch (err) {
       setIsProcessing(false);
       setError(err.response?.data?.error || 'Error sending money.');

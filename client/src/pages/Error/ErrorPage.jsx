@@ -16,7 +16,7 @@ const ErrorPage = () => {
           </p>
         </div>
         <button
-          onClick={() => navigate("/")}
+          onClick={() => navigate("/dashboard")}
           className="mt-4 px-6 py-2 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition"
         >
           Back to Homepage
