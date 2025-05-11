@@ -2,6 +2,7 @@ import React from 'react';
 import Dashboard from '../components/Dashboard';
 import { useEffect, useState } from 'react';
 import axios from 'axios';
+
 function DashboardPage() {
   const [transactions, setTransactions] = useState([]);
   
@@ -21,7 +22,14 @@ function DashboardPage() {
       fetchHistory();
     }, []);
   
-  return <Dashboard transaction={transactions} />;
+  return (
+    <div>
+      <Dashboard  />
+      
+      
+    
+    </div>
+  );
 }
 
 export default DashboardPage;

@@ -3,8 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import QRCode from 'react-qr-code';
 import BankingLoader from '../logo/LoadingLogo';
-
-function Dashboard({transaction}) {
+import RecentTransactions from './RecentTransaction.jsx'
+function Dashboard() {
   const [user, setUser] = useState(null);
   const [showBalance, setShowBalance] = useState(false);
   const [showQRCode, setShowQRCode] = useState(false);
@@ -87,8 +87,19 @@ function Dashboard({transaction}) {
         </div>
 
         {/* Recent Transactions */}
+        
+      </div>
+      <div className="md:p-9">
+        <div className="bg-gray-100 md:p-6 mt-3 rounded-xl shadow-sm">
+          <h3 className="text-xl font-semibold text-red-600 mb-4">Recent Transactions</h3>
+
+            <div className=' '><RecentTransactions/>
+            </div>
+          
+        </div>
        
       </div>
+      
 
       {/* QR Code Pop-up */}
       {showQRCode && (

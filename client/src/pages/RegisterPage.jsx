@@ -36,7 +36,7 @@ function Register() {
 
     try {
       await axios.post(`${import.meta.env.VITE_API_BASE_URL}/api/auth/register`, formData);
-      navigate('/login');
+      navigate('/');
     } catch (err) {
       console.error(err);
       setError('Registration failed. Try again later.');
@@ -74,7 +74,7 @@ function Register() {
           <SelectField label="Marital Status" name="maritalStatus" value={formData.maritalStatus} onChange={handleChange} options={["Single", "Married", "Divorced"]} />
           <Field label="Nominee" name="nominee" value={formData.nominee} onChange={handleChange} placeholder="Jane Doe" type="text" />
           <Field label="Address" name="address" value={formData.address} onChange={handleChange} placeholder="123 Main Street" type="text" />
-          <Field label="UPI ID" name="upiId" value={formData.upiId} onChange={handleChange} placeholder="john@upi" type="text" />
+          {/*<Field label="UPI ID" name="upiId" value={formData.upiId} onChange={handleChange} placeholder="john@upi" type="text" />*/}
 
           <div className="md:col-span-2 pt-4">
             <button
@@ -88,7 +88,7 @@ function Register() {
 
         <p className="text-center text-sm text-gray-500 mt-6">
           Already have an account?{" "}
-          <Link to="/login" className="text-red-600 hover:underline font-medium">
+          <Link to="/" className="text-red-600 hover:underline font-medium">
             Login here
           </Link>
         </p>
