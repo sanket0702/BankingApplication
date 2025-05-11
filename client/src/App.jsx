@@ -6,10 +6,12 @@ import DashboardPage from './pages/DashboardPage';
 import SendMoneyPage from './pages/SendMoneyPage';
 import SendMoneyScan from './pages/SendMoneyScan';
 import ProtectedRoute from './components/ProtectedRoutes';
-import TransactionHistoryPage from './pages/TransactionHistoryPage';
+
 import Navbar from './components/Navbar';
 import ResetPassword from './pages/ResetPassword'
+
 import "./App.css"
+import ErrorPage from './pages/Error/ErrorPage';
 function ProtectedLayout() {
   return (
     <ProtectedRoute>
@@ -29,12 +31,15 @@ function App() {
         <Route path="/" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/reset-password" element={<ResetPassword />} />
+        <Route path="/*" element={<ErrorPage/>} />
         {/* Protected Layout with Navbar */}
         <Route element={<ProtectedLayout />}>
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/send-money" element={<SendMoneyPage />} />
           <Route path="/send-money-qr" element={<SendMoneyScan />} />
-          <Route path="/transactions/history" element={<TransactionHistoryPage />} />
+      
+          
+          <Route path="/*" element={<ErrorPage/>} />
         </Route>
       </Routes>
     </Router>

@@ -31,6 +31,7 @@ function Dashboard({transaction}) {
   const handleQRClick = () => setShowQRCode(true);
   const handleTransferFunds = () => navigate('/send-money');
   const handleScanQR = () => navigate('/send-money-qr');
+  const handleTransactionHistory=()=>navigate('/transactions/history');
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();
@@ -80,7 +81,7 @@ function Dashboard({transaction}) {
         <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-6 mb-8">
           <QuickActionCard icon="https://img.icons8.com/?size=100&id=rCigw8Fdv69u&format=png&color=000000" onClick={handleShowBalance} />
           <QuickActionCard icon="https://img.icons8.com/?size=100&id=Tm8J0mjXpQFK&format=png&color=000000" onClick={handleTransferFunds} />
-          <QuickActionCard icon="https://img.icons8.com/?size=100&id=dGdONlcTaLHk&format=png&color=000000" />
+          <QuickActionCard icon="https://img.icons8.com/?size=100&id=dGdONlcTaLHk&format=png&color=000000" onClick={handleTransactionHistory} />
           <QuickActionCard icon="https://img.icons8.com/?size=100&id=13019&format=png&color=000000" onClick={handleQRClick} />
           <QuickActionCard icon="https://img.icons8.com/?size=100&id=rLRqKccL7rzF&format=png&color=000000" onClick={handleScanQR} />
         </div>

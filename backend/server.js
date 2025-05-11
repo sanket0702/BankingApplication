@@ -1,42 +1,34 @@
 const express = require('express');
-const axios = require('axios'); // Ensure axios is properly imported
 const dotenv = require('dotenv');
 const cors = require('cors');
-const authRoutes = require('./routes/auth.js');
-const transactionRoutes = require('./routes/transaction.js');
-const userRoutes = require('./routes/user.js');
-const passwordRoutes = require('./routes/resetpassword.js')
-const { DatabaseConnection } = require('./database/connection.js');
+
+const {DatabaseConnection} = require('./database/connection.js');
+const registerRoutes = require('./routes/index.js');
+const { setupPing } = require('./services/pingService.js');
 
 dotenv.config();
-DatabaseConnection();
+
 const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Middlewares
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/auth', authRoutes);
-app.use('/api/transaction', transactionRoutes);
-app.use('/api/user', userRoutes);
-app.use('/api/reset-password', passwordRoutes);
+// Database Connection
+DatabaseConnection();
 
-// Health check route to confirm server is running
+// Register Routes
+registerRoutes(app);
+
+// Health Route
 app.get('/health', (req, res) => {
   res.status(200).send('Server is running');
 });
 
-// Start pinging every 50 seconds
-/*const pingServer = () => {
-  axios.get(`${process.env.BASE_URL}/health`) // Assuming health endpoint
-    .then(() => console.log('Server pinged successfully'))
-    .catch((err) => console.error('Error pinging server:', err));
-};*/
+// Optional ping to keep server alive
+// setupPing();
 
-// Ping the server immediately on start
-//pingServer();
-
-// Ping every 50 seconds (50000 milliseconds)
-//setInterval(pingServer, 50000);
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server running on port ${process.env.PORT}`);
+app.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
