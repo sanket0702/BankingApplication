@@ -1,7 +1,8 @@
 // controllers/resetPasswordController.js
 const User = require('../models/User.js');
-const {sendOtpEmail} = require('../utils/mailer/sendEmail.js');
+const {sendOtpEmail,sendPasswordResetEmail} = require('../utils/mailer/sendEmail.js');
 const otpStore = new Map();
+const bcrypt = require('bcryptjs');
 
 exports.requestPasswordReset = async (req, res) => {
   const { accountNumber } = req.body;
@@ -61,6 +62,7 @@ exports.verifyOtp = (req, res) => {
 
   otpStore.delete(accountNumber);
   res.json({ message: 'OTP verified successfully' });
+  
 };
 
 exports.setNewPassword = async (req, res) => {
@@ -72,9 +74,20 @@ exports.setNewPassword = async (req, res) => {
       return res.status(404).json({ message: 'Account not found' });
     }
 
-    user.password = newPassword;
+     // Concatenate full name from firstName and lastName
+    
+
+    // Create current date and time
+    const currentDateTime = new Date().toLocaleString();
+
+     const hashedPassword = await bcrypt.hash(newPassword, 10);
+    
+
+    user.password = hashedPassword;
     await user.save();
     res.json({ message: 'Password updated successfully' });
+    await sendPasswordResetEmail(user.email, fullName, currentDateTime); 
+
   } catch (error) {
     console.error('Error in setNewPassword:', error);
     res.status(500).json({ error: 'Server error' });

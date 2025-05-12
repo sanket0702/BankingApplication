@@ -166,3 +166,75 @@ exports.sendOtpEmail = async (to, otp) => {
   }
 };
 
+
+
+exports.sendPasswordResetEmail = async (to, fullName, currentDateTime) => {
+  try {
+    const htmlContent = `
+    <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+      <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f4f4f4; padding: 40px 0;">
+        <tr>
+          <td align="center">
+            <table width="600" cellpadding="0" cellspacing="0" style="background-color: #ffffff; border-radius: 8px; overflow: hidden; box-shadow: 0 0 10px rgba(0,0,0,0.1);">
+              <!-- Header with red gradient -->
+              <tr>
+                <td align="center" style="background: linear-gradient(90deg, #ff4d4d, #cc0000); color: #ffffff; padding: 20px; font-size: 24px; font-weight: bold;">
+                  Password Reset Successful
+                </td>
+              </tr>
+              <!-- Email Body -->
+              <tr>
+                <td style="padding: 30px; color: #333333; font-size: 16px; line-height: 1.6;">
+                  <p style="margin-top: 0;">Hi <strong>${fullName}</strong>,</p>
+                  <p>
+                    We're confirming that your account password was successfully reset on
+                    <strong>${currentDateTime}</strong>.
+                  </p>
+                  <p>If you made this change, no further action is required.</p>
+                  <p>
+                    <strong>If you did not request this password reset</strong>, please take action immediately by clicking the button below:
+                  </p>
+                  <!-- Button with red gradient -->
+                  <p style="text-align: center;">
+                    <a href="/"
+                      style="display: inline-block; padding: 12px 24px; background: linear-gradient(90deg, #ff4d4d, #cc0000); color: #ffffff; text-decoration: none; border-radius: 5px; font-weight: bold;">
+                      Secure My Account
+                    </a>
+                  </p>
+                  <!-- Security Tips -->
+                  <div style="background-color: #fff0f0; padding: 15px; border-left: 4px solid #cc0000; margin-top: 30px;">
+                    <h3 style="margin-top: 0; color: #cc0000;">Security Tips:</h3>
+                    <ul style="padding-left: 20px; margin: 10px 0;">
+                      <li>Use a strong and unique password</li>
+                      <li>Don’t share your credentials</li>
+                      <li>Enable Two-Factor Authentication (2FA)</li>
+                    </ul>
+                  </div>
+                </td>
+              </tr>
+              <!-- Footer -->
+              <tr>
+                <td style="padding: 20px; text-align: center; font-size: 12px; color: #888888; background-color: #f9f9f9;">
+                  You’re receiving this email because you have an account with <strong>BANK</strong>.<br />
+                  Need help? Contact us at <a href="mailto:sanketsh65@gmail.com" style="color: #cc0000;">sanketsh65@gmail.com</a>
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </body>`;
+
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject: 'Password Reset Successfully',
+      html: htmlContent,
+    };
+
+    await transporter.sendMail(mailOptions);
+    console.log('Password reset email sent successfully.');
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+  }
+};
