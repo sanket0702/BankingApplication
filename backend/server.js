@@ -20,6 +20,9 @@ DatabaseConnection();
 
 // Register Routes
 registerRoutes(app);
+const adminRoutes = require('./routes/ADMIN/index.js');
+app.use('/api/admin', adminRoutes);
+
 
 // Health Route
 app.get('/health', (req, res) => {
