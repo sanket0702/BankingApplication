@@ -1,9 +1,51 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Menu, X } from 'lucide-react'; // Optional: install Lucide icons
-import Logo from "../assets/logo.svg"
+import axios from "axios"
+
+
+///////////////
+import Logo from "../../assets/logo.svg"
+import AvatarMenu from './Avatar';
+
+
 function Navbar() {
   const [menuOpen, setMenuOpen] = useState(false);
+const [currentImage, setCurrentImage] = useState('');
+  
+  
+  const token = localStorage.getItem('token');
+
+  // Fetch current user image
+  useEffect(() => {
+  let isMounted = true;
+  const fetchProfile = async () => {
+    try {
+      const res = await axios.get(`${import.meta.env.VITE_API_BASE_URL}/api/user/image/profile-image`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      if (isMounted) {
+        setCurrentImage(res.data.image?.url);
+        console.log(res)
+      }
+    } catch {
+      if (isMounted) alert('Error loading profile image');
+    }
+  };
+  fetchProfile();
+
+  return () => {
+    isMounted = false;
+  };
+}, [token]);
+
+
+
+
+   
+ 
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -19,10 +61,11 @@ function Navbar() {
 
           {/* Desktop Menu */}
           <div className="hidden md:flex space-x-6 text-white font-medium">
-            <Link to="/dashboard" className="hover:text-yellow-300 transition">Dashboard</Link>
-            <Link to="/transactions" className="hover:text-yellow-300 transition">Transactions</Link>
-            <Link to="/send-money" className="hover:text-yellow-300 transition">Send Money</Link>
-            <button onClick={handleLogout}  className="hover:text-yellow-300 transition">Logout</button>
+           
+            
+
+           <AvatarMenu image={currentImage}/>
+
           </div>
 
           {/* Mobile Menu Button */}

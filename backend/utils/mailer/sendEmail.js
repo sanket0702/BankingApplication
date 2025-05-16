@@ -11,6 +11,32 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+exports.rejectMails= async(to,subject,body)=>{
+try{
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to,
+      subject,
+       html: body,
+    };
+
+    transporter.sendMail(mailOptions, (error, info) => {
+  if (error) {
+    console.error('❌ Email sending failed:', error);
+  } else {
+    console.log('✅ Email sent:', info.response);
+  }
+})
+
+
+
+  } catch (error) {
+    console.error('Error sending email:', error);
+  }
+};
+
+
+
 
 
 

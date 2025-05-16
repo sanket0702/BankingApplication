@@ -2,6 +2,10 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User.js');
 
+const cloudinary = require('../config/cloudinary');
+const fs = require('fs');
+
+
 // Register User
 exports.register = async (req, res) => {
   const { fullName, email, password, ...rest } = req.body;
@@ -22,6 +26,10 @@ exports.register = async (req, res) => {
       password: hashedPassword,
       accountNumber,
       upiId,
+       image: {
+      url: process.env.DEFAULT_IMAGE_URL,
+      public_id: null
+    }
     });
 
     await newUser.save();
@@ -49,3 +57,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ error: 'Server error' });
   }
 };
+
+
+
+

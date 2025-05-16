@@ -17,6 +17,10 @@ const userSchema = new mongoose.Schema({
   upiId: { type: String, required: true, unique: true },
   isVerified: { type: Boolean, default: false },
 isActive: { type: Boolean, default: false },
+image: {
+    url: { type: String, default: 'https://your-default-image-url.com/default.jpg' },
+    public_id: { type: String, default: '' },
+  },
 
   
 });

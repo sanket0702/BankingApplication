@@ -9,11 +9,12 @@ import ProtectedRoute from './components/ProtectedRoutes';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import Navbar from './components/Navbar';
+import Navbar from './components/Navbar/Navbar';
 import ResetPassword from './pages/ResetPassword'
 
 import "./App.css"
 import ErrorPage from './pages/Error/ErrorPage';
+import Profile from './components/Profile';
 function ProtectedLayout() {
   return (
     <ProtectedRoute>
@@ -42,6 +43,7 @@ function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/send-money" element={<SendMoneyPage />} />
           <Route path="/send-money-qr" element={<SendMoneyScan />} />
+          <Route path="/profile" element={<Profile/>} />
       
           
           <Route path="/*" element={<ErrorPage/>} />

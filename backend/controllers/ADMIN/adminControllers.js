@@ -2,6 +2,7 @@ const User = require('../../models/User.js');
 const Admin = require('../../models/ADMIN/admin.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const { rejectMails } = require('../../utils/mailer/sendEmail.js');
 
 
 exports.registerAdmin = async (req, res) => {
@@ -82,6 +83,9 @@ exports.approveUser = async (req, res) => {
 
   res.json({ message: `User ${user.fullName} has been approved` });
 };
+
+// Example route in Express.js
+
 
 // Update user details
 exports.updateUserDetails = async (req, res) => {
