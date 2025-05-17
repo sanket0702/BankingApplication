@@ -26,7 +26,7 @@ function AvatarMenu({image}) {
   };
   const handleLogout = () => {
     localStorage.removeItem('token');
-    alert('Logged out successfully');
+   
     navigate('/');
   };
 

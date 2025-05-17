@@ -1,40 +1,35 @@
 // src/App.js
 import React from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import Login from './pages/Login';
 import Dashboard from './pages/DashboardAdmin';
 import AdminNavbar from './components/Navbar';
 import PendingApprovals from './pages/PendingApprovals';
-const ProtectedRoute = ({ children }) => {
+
+// Protected layout wrapper
+const ProtectedLayout = () => {
   const token = localStorage.getItem('token');
-  return token ? children : <Navigate to="/" />;
+  return token ? (
+    <>
+      <AdminNavbar />
+      <Outlet />
+    </>
+  ) : (
+    <Navigate to="/" />
+  );
 };
-
-
 
 function App() {
   return (
-    <div>
-      <ProtectedRoute>
-            <AdminNavbar/>
-          </ProtectedRoute>
     <Routes>
-      
       <Route path="/" element={<Login />} />
-      <Route
-        path="/dashboard"
-        element={
-          <ProtectedRoute>
-            <Dashboard />
-          </ProtectedRoute>
-        }
-      />
       
-      <Route path="/pending-approvals" element={<ProtectedRoute><PendingApprovals /></ProtectedRoute>} />
-
-      
+      {/* Protected Routes */}
+      <Route element={<ProtectedLayout />}>
+        <Route path="/dashboard" element={<Dashboard />} />
+        <Route path="/pending-approvals" element={<PendingApprovals />} />
+      </Route>
     </Routes>
-    </div>
   );
 }
 

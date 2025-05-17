@@ -1,11 +1,12 @@
 // src/components/AdminNavbar.js
 import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 
 const AdminNavbar = () => {
   const [pendingCount, setPendingCount] = useState(0);
   const token = localStorage.getItem('token');
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCount = async () => {
@@ -21,7 +22,12 @@ const AdminNavbar = () => {
     };
 
     fetchCount();
-  }, []);
+  }, [token]);
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    navigate('/');
+  };
 
   return (
     <nav className="bg-red-600 text-white p-4 flex justify-between items-center">
@@ -36,6 +42,12 @@ const AdminNavbar = () => {
             </span>
           )}
         </Link>
+        <button
+          onClick={handleLogout}
+          className="bg-yellow-400 text-black px-3 py-1 rounded hover:bg-yellow-300"
+        >
+          Logout
+        </button>
       </div>
     </nav>
   );

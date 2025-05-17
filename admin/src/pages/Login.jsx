@@ -20,7 +20,7 @@ const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-red-100 via-white to-red-50 px-4">
       <div className="bg-white p-8 rounded-2xl shadow-lg max-w-md w-full border border-red-200">
-        <h2 className="text-3xl font-bold text-red-600 text-center mb-2">Admin Login</h2>
+        <h2 className="text-3xl font-bold text-red-600 text-center mb-2">Admin Panel</h2>
         <p className="text-center text-gray-500 mb-6">Login to manage the platform</p>
 
         <div className="space-y-4">

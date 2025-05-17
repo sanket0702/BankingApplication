@@ -72,6 +72,7 @@ const [currentImage, setCurrentImage] = useState('');
           <div className="md:hidden">
             <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
               {menuOpen ? <X size={28} /> : <Menu size={28} />}
+              <AvatarMenu/>
             </button>
           </div>
         </div>
