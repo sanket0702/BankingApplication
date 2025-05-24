@@ -3,6 +3,7 @@ const Admin = require('../../models/ADMIN/admin.js');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { rejectMails } = require('../../utils/mailer/sendEmail.js');
+const Transaction = require('../../models/Transaction.js'); // adjust path as needed
 
 
 exports.registerAdmin = async (req, res) => {
@@ -54,16 +55,48 @@ exports.searchUser = async (req, res) => {
 };
 
 // Deposit to user
+
+
+
 exports.depositToUser = async (req, res) => {
-  const { accountNumber, amount } = req.body;
-  const user = await User.findOne({ accountNumber });
-  if (!user) return res.status(404).json({ message: 'User not found' });
+  try {
+    const { accountNumber, amount } = req.body;
+    const numericAmount = parseFloat(amount);
 
-  user.balance += parseFloat(amount);
-  await user.save();
+    const user = await User.findOne({ accountNumber });
+    if (!user) return res.status(404).json({ message: 'User not found' });
 
-  res.json({ message: `Deposited ₹${amount} to ${user.fullName}` });
+    user.balance += numericAmount;
+    await user.save();
+
+    const transaction = new Transaction({
+      transactionId: null,
+      type: 'deposit',
+      sender: null,
+      senderName: 'Cash Deposit',
+      senderUpi: null,
+      senderAccount: null,
+      senderBalance: null,
+      recipient: user._id,
+      receiverName: user.fullName,
+      receiverUpi: user.upiId,
+      receiverAccount: user.accountNumber,
+      receiverBalance: user.balance,
+      amount: numericAmount,
+      message: 'Cash deposit',
+      timestamp: new Date(),
+    });
+
+    await transaction.save();
+
+    res.json({ message: `Deposited ₹${numericAmount} to ${user.fullName}`, transaction });
+
+  } catch (error) {
+    console.error('Deposit error:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
+
 
 // Get all unverified users
 exports.getPendingApprovals = async (req, res) => {

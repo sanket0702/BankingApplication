@@ -6,32 +6,42 @@ const mongoose = require('mongoose');
 
 exports.getRecentTransactions = async (req, res) => {
   try {
-    const userId = req.user.id; // assuming req.user is set correctly by auth middleware
+    const userId = req.user.id;
 
     const transactions = await Transaction.find({
-      $or: [
-        { sender: userId },
-        { recipient: userId }
-      ]
+      $or: [{ sender: userId }, { recipient: userId }]
     })
-    .sort({ timestamp: -1 })
-    .limit(10);
+      .sort({ timestamp: -1 })
+      .limit(10);
 
     const formatted = transactions.map(txn => {
-      const isCredit = txn.recipient.equals(userId); // check if user is the recipient
-      const counterparty = isCredit ? txn.sender : txn.recipient;
+      let typeLabel = '';
+      let balance = 0;
+
+      if (txn.type === 'deposit') {
+        typeLabel = 'credit';
+        balance = txn.receiverBalance;
+      } else if (txn.type === 'withdrawal') {
+        typeLabel = 'debit';
+        balance = txn.senderBalance;
+      } else if (txn.type === 'transfer') {
+        const isCredit = txn.recipient.equals(userId);
+        typeLabel = isCredit ? 'credit' : 'debit';
+        balance = isCredit ? txn.receiverBalance : txn.senderBalance;
+      }
 
       return {
         transactionId: txn.transactionId,
         amount: txn.amount,
-        type: isCredit ? 'credit' : 'debit',
-        message: txn.message,
+        type: typeLabel,
+        message: txn.message || '',
         timestamp: txn.timestamp,
-        balance: isCredit ? txn.receiverBalance : txn.senderBalance,
-        senderName: txn.senderName,
-        receiverName: txn.receiverName,
-        senderAccount: txn.senderAccount,
-        receiverAccount: txn.receiverAccount
+        balance,
+        senderName: txn.senderName || 'Bank',
+        receiverName: txn.receiverName || 'Bank',
+        senderAccount: txn.senderAccount || '',
+        receiverAccount: txn.receiverAccount || '',
+        transactionType: txn.type // helpful for frontend filtering
       };
     });
 

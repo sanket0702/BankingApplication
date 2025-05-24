@@ -71,14 +71,14 @@ const [currentImage, setCurrentImage] = useState('');
           {/* Mobile Menu Button */}
           <div className="md:hidden">
             <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
-              {menuOpen ? <X size={28} /> : <Menu size={28} />}
+              
               <AvatarMenu/>
             </button>
           </div>
         </div>
       </div>
 
-      {/* Mobile Dropdown Menu */}
+      {/* Mobile Dropdown Menu 
       {menuOpen && (
         <div className="md:hidden px-4 pb-4 space-y-3 text-white font-medium bg-gradient-to-r from-red-600 to-red-900">
           <Link to="/dashboard" onClick={() => setMenuOpen(false)} className="block hover:text-yellow-300">Dashboard</Link>
@@ -86,7 +86,7 @@ const [currentImage, setCurrentImage] = useState('');
           <Link to="/send-money" onClick={() => setMenuOpen(false)} className="block hover:text-yellow-300">Send Money</Link>
           <button   onClick={handleLogout} className="block hover:text-yellow-300">Logout</button>
         </div>
-      )}
+      )}*/}
     </nav>
   );
 }

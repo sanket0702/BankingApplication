@@ -36,46 +36,52 @@ const TransactionHistory = () => {
   }
 
   return (
-      <div className=" w-[100%] p-4">
-      
+      <div className="w-[100%] p-4">
+  {transactions.length === 0 ? (
+    <p className="text-center text-gray-500">No transactions found.</p>
+  ) : (
+    transactions.map((txn) => {
+      const isCredit = txn.type === 'credit';
+      const label = txn.transactionType === 'deposit'
+        ? 'Cash Deposit'
+        : txn.transactionType === 'withdrawal'
+        ? 'Cash Withdrawal'
+        : isCredit
+        ? `Received from ${txn.senderName}`
+        : `Sent to ${txn.receiverName}`;
 
-      {transactions.length === 0 ? (
-        <p className="text-center text-gray-500">No transactions found.</p>
-      ) : (
-        transactions.map((txn) => (
-          <div
-            key={txn.transactionId}
-            className="bg-white w-[100%] rounded-xl  shadow-md p-4 mb-4 transition hover:shadow-lg"
-          >
-            <div className="flex justify-between items-start flex-wrap">
-              <div className="flex-1 min-w-[200px]">
-                <p className="font-semibold text-gray-800">
-                  {txn.type === 'credit' ? 'Received from' : 'Sent to'}{' '}
-                  {txn.type === 'credit' ? txn.senderName : txn.receiverName}
-                </p>
-                <p className="text-sm text-gray-600">
-                  {txn.message || 'No message'}
-                </p>
-              </div>
-              <div
-                className={`text-lg font-bold ${
-                  txn.type === 'credit' ? 'text-green-600' : 'text-red-600'
-                } mt-2 sm:mt-0`}
-              >
-                {txn.type === 'credit' ? '+' : '-'}₹{txn.amount}
-              </div>
+      return (
+        <div
+          key={txn.transactionId}
+          className="bg-white w-[100%] rounded-xl shadow-md p-4 mb-4 transition hover:shadow-lg"
+        >
+          <div className="flex justify-between items-start flex-wrap">
+            <div className="flex-1 min-w-[200px]">
+              <p className="font-semibold text-gray-800">{label}</p>
+              <p className="text-sm text-gray-600">
+                {txn.message || 'No message'}
+              </p>
             </div>
-
-            <div className="flex justify-between text-sm text-gray-500 mt-3 flex-wrap">
-              <span>{new Date(txn.timestamp).toLocaleString()}</span>
-              <span className="font-medium text-gray-700">
-                Balance: ₹{txn.balance}
-              </span>
+            <div
+              className={`text-lg font-bold ${
+                isCredit ? 'text-green-600' : 'text-red-600'
+              } mt-2 sm:mt-0`}
+            >
+              {isCredit ? '+' : '-'}₹{txn.amount}
             </div>
           </div>
-        ))
-      )}
-    </div>
+
+          <div className="flex justify-between text-sm text-gray-500 mt-3 flex-wrap">
+            <span>{new Date(txn.timestamp).toLocaleString()}</span>
+            <span className="font-medium text-gray-700">
+              Balance: ₹{txn.balance}
+            </span>
+          </div>
+        </div>
+      );
+    })
+  )}
+</div>
   );
 };
 

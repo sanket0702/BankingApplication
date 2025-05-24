@@ -13,7 +13,6 @@ exports.sendMoney = async (req, res) => {
     const { recipient, amount, message } = req.body;
     const sender = req.user;
 
-    // Ensure amount is a number
     const numericAmount = Number(amount);
     if (!numericAmount || numericAmount <= 0) {
       return res.status(400).json({ error: 'Amount must be a valid number greater than zero' });
@@ -23,6 +22,10 @@ exports.sendMoney = async (req, res) => {
       $or: [{ accountNumber: recipient }, { upiId: recipient }],
     });
 
+    if (!recipientUser) {
+      return res.status(404).json({ error: 'Recipient not found' });
+    }
+
     if (
       sender.accountNumber === recipientUser.accountNumber ||
       sender.upiId === recipientUser.upiId
@@ -30,11 +33,6 @@ exports.sendMoney = async (req, res) => {
       return res.status(400).json({ error: 'Cannot send money to your own account' });
     }
 
-    if (!recipientUser) {
-      return res.status(404).json({ error: 'Recipient not found' });
-    }
-
-    // Ensure balances are numbers
     sender.balance = Number(sender.balance);
     recipientUser.balance = Number(recipientUser.balance);
 
@@ -42,23 +40,19 @@ exports.sendMoney = async (req, res) => {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
-    // Perform balance update
+    // Update balances
     sender.balance -= numericAmount;
     recipientUser.balance += numericAmount;
 
-    // Save both users
     await sender.save();
     await recipientUser.save();
 
-// Generate unique transaction ID
     const transactionId = generateTransactionId();
+    const timestamp = new Date();
 
-    const timestamp = new Date(); 
-
-    // Save transaction
     const transaction = new Transaction({
-
       transactionId,
+      type: 'transfer',
       sender: sender._id,
       recipient: recipientUser._id,
       amount: numericAmount,
@@ -69,27 +63,32 @@ exports.sendMoney = async (req, res) => {
       receiverName: recipientUser.fullName,
       receiverUpi: recipientUser.upiId,
       receiverAccount: recipientUser.accountNumber,
-      senderBalance: sender.balance, // Store sender's balance after transaction
+      senderBalance: sender.balance,
       receiverBalance: recipientUser.balance,
-      timestamp
+      timestamp,
     });
+
     await transaction.save();
-console.log(sender.email);
 
+    await sendDebitedEmail(
+      sender.email,
+      'Debit Alert - Trusted Bank',
+      sender,
+      recipientUser,
+      numericAmount,
+      transactionId,
+      timestamp
+    );
 
-
-
-
-
-
-    // Send email notifications
-    
-
-await sendDebitedEmail(sender.email, 'Debit Alert - Trusted Bank',sender, recipientUser, numericAmount, transactionId, timestamp);
-
-
-    await sendCreditedEmail(recipientUser.email, 'Credit Alert - Trusted Bank',sender, recipientUser, numericAmount, transactionId, timestamp);
-
+    await sendCreditedEmail(
+      recipientUser.email,
+      'Credit Alert - Trusted Bank',
+      sender,
+      recipientUser,
+      numericAmount,
+      transactionId,
+      timestamp
+    );
 
     res.json({ message: 'Transaction successful' });
   } catch (error) {
@@ -97,6 +96,7 @@ await sendDebitedEmail(sender.email, 'Debit Alert - Trusted Bank',sender, recipi
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 
 
