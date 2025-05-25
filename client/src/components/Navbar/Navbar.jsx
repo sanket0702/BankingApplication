@@ -28,7 +28,7 @@ const [currentImage, setCurrentImage] = useState('');
       });
       if (isMounted) {
         setCurrentImage(res.data.image?.url);
-        console.log(res)
+        
       }
     } catch {
       if (isMounted) alert('Error loading profile image');
@@ -70,10 +70,10 @@ const [currentImage, setCurrentImage] = useState('');
 
           {/* Mobile Menu Button */}
           <div className="md:hidden">
-            <button onClick={() => setMenuOpen(!menuOpen)} className="text-white">
+            
               
               <AvatarMenu image={currentImage}/>
-            </button>
+            
           </div>
         </div>
       </div>

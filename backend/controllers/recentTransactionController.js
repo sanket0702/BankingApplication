@@ -64,9 +64,7 @@ exports.getStatement = async (req, res) => {
 
     // Fetch user details
     const user = await User.findById(userId).select('name accountNumber email createdAt');
-    console.log("hello user")
-    console.log(user);
-    
+
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
     }
@@ -76,22 +74,17 @@ exports.getStatement = async (req, res) => {
       $or: [{ sender: userId }, { recipient: userId }]
     }).sort({ timestamp: -1 });
 
-    // Format transactions for frontend
     const formatted = transactions.map(txn => {
-      let typeLabel = '';
-      let balance = 0;
+      const isSender = txn.sender?.toString() === userId;
+  const isRecipient = txn.recipient?.toString() === userId;
 
-      if (txn.type === 'deposit') {
-        typeLabel = 'credit';
-        balance = txn.receiverBalance;
-      } else if (txn.type === 'withdrawal') {
-        typeLabel = 'debit';
-        balance = txn.senderBalance;
-      } else if (txn.type === 'transfer') {
-        const isCredit = txn.recipient.equals(userId);
-        typeLabel = isCredit ? 'credit' : 'debit';
-        balance = isCredit ? txn.receiverBalance : txn.senderBalance;
-      }
+  let typeLabel = isRecipient ? 'credit' : 'debit';  // Use 'let' here!
+
+  if (txn.type === 'deposit') {
+    typeLabel = 'deposit';
+  }
+
+  const balance = isRecipient ? txn.receiverBalance : txn.senderBalance;
 
       return {
         transactionId: txn.transactionId || null,
@@ -99,18 +92,17 @@ exports.getStatement = async (req, res) => {
         type: typeLabel,
         message: txn.message || (txn.type === 'deposit' ? 'Cash Deposit' : ''),
         timestamp: txn.timestamp,
-        balance,
+        balance: balance ?? 0,
         senderName: txn.senderName || 'Bank',
         receiverName: txn.receiverName || 'Bank',
         senderAccount: txn.senderAccount || '',
         receiverAccount: txn.receiverAccount || '',
-        transactionType: txn.type
+        transactionType: txn.type === 'deposit' ? 'deposit' : null
       };
     });
 
     res.status(200).json({
       user: {
-       
         email: user.email,
         createdAt: user.createdAt
       },
