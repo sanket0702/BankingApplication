@@ -52,7 +52,7 @@ exports.sendMoney = async (req, res) => {
 
     const transaction = new Transaction({
       transactionId,
-      type: 'transfer',
+      type: null,
       sender: sender._id,
       recipient: recipientUser._id,
       amount: numericAmount,
@@ -132,3 +132,6 @@ exports.getUserTransactions = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch transaction history' });
   }
 };
+
+// Example Express route
+

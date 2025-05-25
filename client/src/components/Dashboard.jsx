@@ -31,7 +31,7 @@ function Dashboard() {
   const handleQRClick = () => setShowQRCode(true);
   const handleTransferFunds = () => navigate('/send-money');
   const handleScanQR = () => navigate('/send-money-qr');
-  const handleTransactionHistory=()=>navigate('/transactions/history');
+  const handleTransactionHistory=()=>navigate('/statement');
   const handleLogout = () => {
     localStorage.removeItem('token');
     window.location.reload();

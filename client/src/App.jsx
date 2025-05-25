@@ -15,6 +15,7 @@ import ResetPassword from './pages/ResetPassword'
 import "./App.css"
 import ErrorPage from './pages/Error/ErrorPage';
 import Profile from './components/Profile';
+import StatementPage from './pages/StatementPage/StatementPage';
 function ProtectedLayout() {
   return (
     <ProtectedRoute>
@@ -44,6 +45,7 @@ function App() {
           <Route path="/send-money" element={<SendMoneyPage />} />
           <Route path="/send-money-qr" element={<SendMoneyScan />} />
           <Route path="/profile" element={<Profile/>} />
+          <Route path="/statement" element={<StatementPage/>} />
       
           
           <Route path="/*" element={<ErrorPage/>} />
