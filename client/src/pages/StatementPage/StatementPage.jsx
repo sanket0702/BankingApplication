@@ -68,9 +68,11 @@ const TransactionStatement = () => {
 
     {/* Table Section */}
     <h2 className="text-lg md:text-xl font-semibold mb-3">Transaction History</h2>
-    <div className="overflow-x-auto">
+
+    {/* Scrollable Table */}
+    <div className="max-h-64 overflow-y-auto">
       <table className="min-w-full text-left text-xs md:text-sm border bg-white shadow-md rounded-lg">
-        <thead className="bg-gray-100">
+        <thead className="sticky top-0 bg-gray-100">
           <tr>
             <th className="py-2 px-4">Date</th>
             <th className="py-2 px-4">Description</th>
@@ -124,6 +126,7 @@ const TransactionStatement = () => {
     Download PDF Statement
   </button>
 </div>
+
 
   );
 };
