@@ -8,16 +8,19 @@ const buildDebitEmail = require('../HtmlMessages/Transactions/buildDebitEmail.js
 const buildCreditEmail = require('../HtmlMessages/Transactions/buildCreditEmail.js');
 
 // Send Money
+// Send Money Controller
 exports.sendMoney = async (req, res) => {
   try {
     const { recipient, amount, message } = req.body;
     const sender = req.user;
 
-    const numericAmount = Number(amount);
-    if (!numericAmount || numericAmount <= 0) {
+    // Validate amount
+    const numericAmount = parseFloat(amount);
+    if (isNaN(numericAmount) || numericAmount <= 0) {
       return res.status(400).json({ error: 'Amount must be a valid number greater than zero' });
     }
 
+    // Find recipient by accountNumber or UPI ID
     const recipientUser = await User.findOne({
       $or: [{ accountNumber: recipient }, { upiId: recipient }],
     });
@@ -26,6 +29,7 @@ exports.sendMoney = async (req, res) => {
       return res.status(404).json({ error: 'Recipient not found' });
     }
 
+    // Prevent self-transfer
     if (
       sender.accountNumber === recipientUser.accountNumber ||
       sender.upiId === recipientUser.upiId
@@ -33,30 +37,34 @@ exports.sendMoney = async (req, res) => {
       return res.status(400).json({ error: 'Cannot send money to your own account' });
     }
 
-    sender.balance = Number(sender.balance);
-    recipientUser.balance = Number(recipientUser.balance);
+    // Ensure balances are numbers
+    sender.balance = parseFloat(sender.balance) || 0;
+    recipientUser.balance = parseFloat(recipientUser.balance) || 0;
 
     if (sender.balance < numericAmount) {
       return res.status(400).json({ error: 'Insufficient balance' });
     }
 
     // Update balances
-    sender.balance -= numericAmount;
-    recipientUser.balance += numericAmount;
+    sender.balance = parseFloat((sender.balance - numericAmount).toFixed(2));
+    recipientUser.balance = parseFloat((recipientUser.balance + numericAmount).toFixed(2));
 
-    await sender.save();
-    await recipientUser.save();
+    // Save updated balances
+    await Promise.all([sender.save(), recipientUser.save()]);
 
+    // Generate transaction ID and timestamp
     const transactionId = generateTransactionId();
     const timestamp = new Date();
 
+    // Create transaction document
     const transaction = new Transaction({
       transactionId,
-      type: null,
+      type: 'transfer',
       sender: sender._id,
       recipient: recipientUser._id,
       amount: numericAmount,
-      message,
+      message: message || '',
+      timestamp,
       senderName: sender.fullName,
       senderUpi: sender.upiId,
       senderAccount: sender.accountNumber,
@@ -65,37 +73,31 @@ exports.sendMoney = async (req, res) => {
       receiverAccount: recipientUser.accountNumber,
       senderBalance: sender.balance,
       receiverBalance: recipientUser.balance,
-      timestamp,
     });
 
     await transaction.save();
 
-    await sendDebitedEmail(
-      sender.email,
-      'Debit Alert - Trusted Bank',
-      sender,
-      recipientUser,
-      numericAmount,
-      transactionId,
-      timestamp
-    );
+    // Send email notifications in parallel
+    await Promise.all([
+      sendDebitedEmail(sender.email, 'Debit Alert - Trusted Bank', sender, recipientUser, numericAmount, transactionId, timestamp),
+      sendCreditedEmail(recipientUser.email, 'Credit Alert - Trusted Bank', sender, recipientUser, numericAmount, transactionId, timestamp),
+    ]);
 
-    await sendCreditedEmail(
-      recipientUser.email,
-      'Credit Alert - Trusted Bank',
-      sender,
-      recipientUser,
-      numericAmount,
+    // Response
+    res.status(200).json({
+      message: 'Transaction successful',
       transactionId,
-      timestamp
-    );
+      timestamp,
+      senderNewBalance: sender.balance,
+      receiverNewBalance: recipientUser.balance,
+    });
 
-    res.json({ message: 'Transaction successful' });
   } catch (error) {
     console.error('Send Money Error:', error);
     res.status(500).json({ error: 'Internal server error' });
   }
 };
+
 
 
 
