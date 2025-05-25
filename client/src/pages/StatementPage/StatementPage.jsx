@@ -2,7 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import axios from 'axios';
 import jsPDF from 'jspdf';
 import html2canvas from 'html2canvas';
-
+import Logo from '../../assets/logo.svg'
 const TransactionStatement = () => {
   const [transactions, setTransactions] = useState([]);
   const [userInfo, setUserInfo] = useState([]);
@@ -57,7 +57,9 @@ const TransactionStatement = () => {
     
     {/* Header Section */}
     <div className="mb-4 md:mb-6 border-b pb-4">
-      <h1 className="text-2xl md:text-3xl font-bold text-blue-800 mb-2">Bank of NextGen</h1>
+      <h1 className="flex items-center h-[40px] w-[110px] bg-red-600">
+  <img src={Logo} alt="Bank of NextGen Logo" className="h-[35px] w-auto object-cover " />
+</h1>
       <div className="text-xs md:text-sm text-gray-600 space-y-1">
         <p><strong>Name:</strong> {userInfo.fullName || 'John Doe'}</p>
         <p><strong>Account Number:</strong> {userInfo.accountNumber || 'XXXX-XXXX-XXXX-1234'}</p>
